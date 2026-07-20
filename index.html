@@ -167,20 +167,6 @@
   }
   @media (max-width: 920px) { .hero-grid { grid-template-columns: 1fr; } .spec { max-width: 460px; } }
 
-  .hero-status {
-    display: inline-flex; align-items: center; gap: 12px;
-    font-family: var(--f-mono); font-size: 11.5px;
-    letter-spacing: .16em; color: var(--muted); text-transform: uppercase;
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); position: relative; }
-  .dot::after {
-    content: ""; position: absolute; inset: -4px; border-radius: 50%;
-    background: var(--amber); opacity: .4;
-    animation: pulse 2.6s var(--ease) infinite;
-  }
-  @keyframes pulse { 0% { transform: scale(.6); opacity: .5; } 100% { transform: scale(2.4); opacity: 0; } }
-  .hero-status .sep { color: var(--dim); }
-
   .hero h1 {
     font-family: var(--f-display);
     font-weight: 600;
@@ -604,7 +590,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-    .dot::after, .cursor, body::after, .ticker-track { animation: none !important; }
+    .cursor, body::after, .ticker-track { animation: none !important; }
     html { scroll-behavior: auto; }
   }
 
@@ -640,12 +626,6 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="reveal">
-        <span class="hero-status">
-          <span class="dot" aria-hidden="true"></span>
-          Available for work
-          <span class="sep">·</span>
-          Tashkent, UZ
-        </span>
         <h1>
           <span>Sardor</span>
           <span>Samijonov</span>
@@ -746,7 +726,6 @@
                 <p class="ptagline">Describe a form in plain language, get a complete, shareable form back in seconds.</p>
               </div>
               <div class="phead-right">
-                <span class="status ship"><span class="sd"></span>Shipped</span>
                 <div class="plinks">
                   <a class="plink" href="https://github.com/SamijonovSardor/AI-form-builder" target="_blank" rel="noopener">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
@@ -814,7 +793,6 @@
                 <p class="ptagline">Full-stack AI platform built independently — from architecture to domain deployment.</p>
               </div>
               <div class="phead-right">
-                <span class="status ship"><span class="sd"></span>Shipped</span>
                 <div class="plinks">
                   <a class="plink" href="https://github.com/SamijonovSardor/Sardex" target="_blank" rel="noopener">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
