@@ -284,34 +284,55 @@
   .fact .fv { font-family: var(--f-display); font-size: 1.05rem; margin-top: 6px; color: var(--text); }
   .fact .fv .a { color: var(--amber); }
 
-  /* ---------- Projects (case-study layout) ---------- */
-  .projects { display: flex; flex-direction: column; gap: 26px; }
+  /* ---------- Projects (scalable: featured + filterable grid) ---------- */
 
-  .project {
+  /* Filter bar */
+  .pfilters {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: clamp(28px, 4vh, 44px);
+  }
+  .pfilter {
+    font-family: var(--f-mono); font-size: 11.5px;
+    color: var(--muted); background: transparent;
+    border: 1px solid var(--border); border-radius: 2px;
+    padding: 9px 14px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    letter-spacing: .04em;
+    transition: color .3s, border-color .3s, background .3s;
+  }
+  .pfilter .ct {
+    font-size: 10px; color: var(--dim);
+    padding: 1px 5px; border: 1px solid var(--border);
+    border-radius: 2px; line-height: 1.4;
+  }
+  .pfilter:hover { color: var(--text); border-color: var(--border-2); }
+  .pfilter.active {
+    color: var(--amber); border-color: var(--amber);
+    background: var(--amber-soft);
+  }
+  .pfilter.active .ct { color: var(--amber); border-color: rgba(255,181,71,.3); }
+
+  /* Grid — scales to any number of cards */
+  .pcards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 760px) { .pcards { grid-template-columns: 1fr; } }
+
+  /* Individual card */
+  .pcard {
     position: relative;
     border: 1px solid var(--border);
     border-radius: 6px;
     background: linear-gradient(180deg, rgba(255,255,255,.015), transparent 60%);
+    padding: clamp(24px, 3vw, 34px);
     overflow: hidden;
-    transition: border-color .45s var(--ease), transform .45s var(--ease), box-shadow .45s var(--ease);
+    display: flex; flex-direction: column;
+    transition: border-color .45s var(--ease), transform .45s var(--ease), box-shadow .45s var(--ease), opacity .4s var(--ease);
   }
-  /* Watermark index — like a drawing-sheet number; faint, brightens on hover */
-  .project::before {
-    content: attr(data-idx);
-    position: absolute;
-    top: -22px; right: 30px;
-    font-family: var(--f-display);
-    font-size: clamp(7rem, 15vw, 12rem);
-    font-weight: 700;
-    line-height: 1;
-    color: rgba(255,255,255,.022);
-    letter-spacing: -.05em;
-    pointer-events: none;
-    z-index: 0;
-    transition: color .5s var(--ease);
-  }
-  /* Left accent rail — scales in on hover, amber→teal (craft→system) */
-  .project::after {
+  /* Left accent rail — scales in on hover, amber→teal */
+  .pcard::before {
     content: "";
     position: absolute; top: 0; bottom: 0; left: 0;
     width: 2px;
@@ -319,179 +340,194 @@
     transform: scaleY(0); transform-origin: top;
     transition: transform .55s var(--ease);
   }
-  .project:hover {
+  .pcard:hover {
     border-color: var(--border-2);
     transform: translateY(-3px);
     box-shadow: 0 30px 70px -40px rgba(0,0,0,.8);
   }
-  .project:hover::before { color: rgba(255,181,71,.06); }
-  .project:hover::after  { transform: scaleY(1); }
+  .pcard:hover::before { transform: scaleY(1); }
+  .pcard.hidden { display: none; }
 
-  .project-inner { position: relative; z-index: 1; padding: clamp(26px, 3.5vw, 44px); }
-
-  /* Header band: index | title block | status + links */
-  .phead {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: clamp(20px, 3vw, 36px);
-    align-items: start;
+  .pc-top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 18px;
   }
-  @media (max-width: 760px) { .phead { grid-template-columns: 1fr; gap: 18px; } }
-
-  .pidx {
+  .pc-index {
     font-family: var(--f-display);
-    font-size: clamp(1.9rem, 3vw, 2.5rem);
-    font-weight: 600;
-    color: var(--amber);
-    line-height: 1;
-    letter-spacing: -.02em;
-    min-width: 2.5ch;
-    padding-top: 6px;
+    font-size: 1.4rem; font-weight: 600;
+    color: var(--amber); line-height: 1; letter-spacing: -.02em;
   }
-  .pidx .sl { color: var(--dim); font-weight: 400; }
+  .pc-index .sl { color: var(--dim); font-weight: 400; font-size: .7em; }
 
-  .ptitle-block { min-width: 0; }
-  .pcat {
-    font-family: var(--f-mono);
-    font-size: 11px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
-  .pname {
-    font-family: var(--f-display);
-    font-size: clamp(1.6rem, 3.4vw, 2.35rem);
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -.02em;
-    margin-top: 8px;
-  }
-  .pname .a { color: var(--amber); }
-  .ptagline {
-    color: var(--muted);
-    margin-top: 12px;
-    font-size: clamp(1rem, 1.4vw, 1.12rem);
-    max-width: 62ch;
-    line-height: 1.5;
-  }
-
-  .phead-right { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
-  @media (max-width: 760px) { .phead-right { align-items: flex-start; } }
-
-  /* Status pill — real project state, color-coded */
-  .status {
-    font-family: var(--f-mono);
-    font-size: 10.5px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    padding: 6px 11px;
-    border: 1px solid var(--border-2);
-    border-radius: 2px;
-    display: inline-flex; align-items: center; gap: 8px;
+  /* Status pill (for in-development projects only) */
+  .pc-status {
+    font-family: var(--f-mono); font-size: 10px;
+    letter-spacing: .14em; text-transform: uppercase;
+    padding: 5px 10px; border: 1px solid rgba(255,181,71,.3);
+    border-radius: 2px; color: var(--amber);
+    display: inline-flex; align-items: center; gap: 7px;
     white-space: nowrap;
   }
-  .status .sd { width: 7px; height: 7px; border-radius: 50%; flex: none; }
-  .status.live { color: var(--teal); border-color: rgba(94,234,212,.3); }
-  .status.live .sd { background: var(--teal); box-shadow: 0 0 8px var(--teal); }
-  .status.ship { color: var(--amber); border-color: rgba(255,181,71,.3); }
-  .status.ship .sd { background: var(--amber); }
-  .status.dev  { color: var(--amber); border-color: rgba(255,181,71,.3); }
-  .status.dev  .sd { background: var(--amber); opacity: .55; }
+  .pc-status .sd { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); opacity: .55; }
 
-  .plinks { display: flex; gap: 10px; flex-wrap: wrap; }
-  .plink {
+  .pc-cat {
+    font-family: var(--f-mono);
+    font-size: 11px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--dim);
+  }
+  .pc-name {
+    font-family: var(--f-display);
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    font-weight: 600; line-height: 1.1;
+    letter-spacing: -.02em; margin-top: 6px;
+  }
+  .pc-name .a { color: var(--amber); }
+  .pc-tagline {
+    color: var(--muted); margin-top: 10px;
+    font-size: .98rem; line-height: 1.5;
+  }
+  .pc-desc {
+    color: var(--muted); margin-top: 14px;
+    font-size: 13.5px; line-height: 1.6;
+    flex: 1;
+  }
+  .pc-desc b { color: var(--text); font-weight: 500; }
+
+  .pc-stack {
+    margin-top: 20px; padding-top: 18px;
+    border-top: 1px solid var(--border);
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .pc-stack .chip {
+    font-family: var(--f-mono); font-size: 11px;
+    padding: 4px 8px; border: 1px solid var(--border);
+    color: var(--muted); border-radius: 2px;
+    transition: color .25s, border-color .25s;
+  }
+  .pc-stack .chip:hover { color: var(--text); border-color: var(--border-2); }
+
+  .pc-links {
+    margin-top: 18px;
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .pc-link {
     font-family: var(--f-mono); font-size: 11.5px; color: var(--muted);
     display: inline-flex; align-items: center; gap: 7px;
     border: 1px solid var(--border); padding: 8px 12px; border-radius: 2px;
     transition: color .3s, border-color .3s, background .3s;
   }
-  .plink svg { width: 13px; height: 13px; }
-  .plink:hover { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
-  .plink.live:hover { color: var(--teal); border-color: var(--teal); background: var(--teal-soft); }
+  .pc-link svg { width: 13px; height: 13px; }
+  .pc-link:hover { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
 
-  /* Metadata strip — spec-sheet labels, hairline dividers */
-  .pmeta {
-    display: flex; flex-wrap: wrap; align-items: center;
-    margin-top: 22px; padding-top: 18px;
-    border-top: 1px solid var(--border);
-    font-family: var(--f-mono);
-    font-size: 11px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--dim);
+  /* Featured project — full-width, richer layout */
+  .pfeatured {
+    position: relative;
+    border: 1px solid var(--border-2);
+    border-radius: 6px;
+    background: linear-gradient(180deg, rgba(255,255,255,.025), transparent 60%);
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: border-color .45s var(--ease), box-shadow .45s var(--ease);
   }
-  .pmeta .mi { display: inline-flex; align-items: center; }
-  .pmeta .mi + .mi::before {
-    content: ""; display: inline-block;
-    width: 1px; height: 11px; background: var(--border-2);
-    margin: 0 16px;
+  .pfeatured::before {
+    content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 3px;
+    background: linear-gradient(180deg, var(--amber), var(--teal));
   }
-  .pmeta .mi b { color: var(--muted); font-weight: 500; }
+  .pfeatured:hover { border-color: var(--amber); box-shadow: 0 30px 80px -40px rgba(0,0,0,.85); }
+  .pfeatured-inner { padding: clamp(28px, 4vw, 48px); }
 
-  /* Body — single column, editorial */
-  .pbody { margin-top: 28px; }
+  .pf-tag {
+    font-family: var(--f-mono); font-size: 10.5px;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--amber);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .pf-tag::before {
+    content: ""; width: 20px; height: 1px; background: var(--amber);
+  }
+  .pf-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 24px; flex-wrap: wrap; margin-top: 14px;
+  }
+  .pf-title-block { min-width: 0; }
+  .pf-name {
+    font-family: var(--f-display);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 600; line-height: 1.02;
+    letter-spacing: -.025em;
+  }
+  .pf-tagline {
+    color: var(--muted); margin-top: 12px;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    max-width: 60ch; line-height: 1.5;
+  }
+  .pf-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pf-link {
+    font-family: var(--f-mono); font-size: 11.5px; color: var(--muted);
+    display: inline-flex; align-items: center; gap: 7px;
+    border: 1px solid var(--border-2); padding: 9px 13px; border-radius: 2px;
+    transition: color .3s, border-color .3s, background .3s;
+  }
+  .pf-link svg { width: 14px; height: 14px; }
+  .pf-link:hover { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
 
-  .pintro {
+  .pf-body { margin-top: 28px; }
+  .pf-intro {
     color: var(--text);
     font-size: clamp(1.05rem, 1.5vw, 1.2rem);
-    line-height: 1.6;
-    max-width: 64ch;
-    font-weight: 400;
+    line-height: 1.6; max-width: 64ch;
   }
-  .pintro strong { color: var(--amber); font-weight: 500; }
+  .pf-intro strong { color: var(--amber); font-weight: 500; }
 
-  .pfeatures {
+  .pf-features {
     margin-top: 28px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
   }
-  @media (max-width: 600px) { .pfeatures { grid-template-columns: 1fr; } }
-  .pfeat {
-    background: var(--bg);
-    padding: 20px 22px;
+  @media (max-width: 600px) { .pf-features { grid-template-columns: 1fr; } }
+  .pf-feat {
+    background: var(--bg); padding: 20px 22px;
     transition: background .3s;
   }
-  .pfeat:hover { background: var(--surface); }
-  .pfeat .pl {
-    font-family: var(--f-mono);
-    font-size: 10.5px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 9px;
+  .pf-feat:hover { background: var(--surface); }
+  .pf-feat .pl {
+    font-family: var(--f-mono); font-size: 10.5px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--amber); margin-bottom: 9px;
     display: flex; align-items: baseline; gap: 9px;
   }
-  .pfeat .pl .n { color: var(--dim); }
-  .pfeat .pd { color: var(--muted); font-size: 13.5px; line-height: 1.58; }
-  .pfeat .pd b { color: var(--text); font-weight: 500; }
+  .pf-feat .pl .n { color: var(--dim); }
+  .pf-feat .pd { color: var(--muted); font-size: 13.5px; line-height: 1.58; }
+  .pf-feat .pd b { color: var(--text); font-weight: 500; }
 
-  /* Stack row — labeled, full width, hairline above */
-  .pstack-row {
-    margin-top: 26px;
-    padding-top: 22px;
+  .pf-stack-row {
+    margin-top: 26px; padding-top: 22px;
     border-top: 1px solid var(--border);
-    display: flex; align-items: center; gap: 18px;
-    flex-wrap: wrap;
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
   }
-  .pslabel {
+  .pf-slabel {
     font-family: var(--f-mono); font-size: 10.5px;
     letter-spacing: .14em; text-transform: uppercase; color: var(--dim);
-    white-space: nowrap;
-    display: flex; align-items: center; gap: 10px;
+    white-space: nowrap; display: flex; align-items: center; gap: 10px;
   }
-  .pslabel::after { content: ""; width: 24px; height: 1px; background: var(--border-2); }
-  .pstack { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip {
+  .pf-slabel::after { content: ""; width: 24px; height: 1px; background: var(--border-2); }
+  .pf-stack { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pf-stack .chip {
     font-family: var(--f-mono); font-size: 11.5px;
     padding: 6px 10px; border: 1px solid var(--border); color: var(--muted);
     border-radius: 2px; transition: color .25s, border-color .25s, background .25s;
   }
-  .chip:hover { color: var(--text); border-color: var(--border-2); background: rgba(255,255,255,.03); }
+  .pf-stack .chip:hover { color: var(--text); border-color: var(--border-2); background: rgba(255,255,255,.03); }
+
+  /* No-results state */
+  .pempty {
+    grid-column: 1 / -1;
+    text-align: center; padding: 60px 20px;
+    color: var(--dim); font-family: var(--f-mono);
+    font-size: 13px; letter-spacing: .04em;
+    border: 1px dashed var(--border); border-radius: 6px;
+  }
 
   /* ---------- Skills ---------- */
   .skills-grid {
@@ -575,8 +611,11 @@
   /* ---------- Reveal ---------- */
   .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
   .reveal.in { opacity: 1; transform: none; }
-  .projects .reveal:nth-child(2) { transition-delay: .08s; }
-  .projects .reveal:nth-child(3) { transition-delay: .16s; }
+  .pcards .reveal:nth-child(2) { transition-delay: .06s; }
+  .pcards .reveal:nth-child(3) { transition-delay: .12s; }
+  .pcards .reveal:nth-child(4) { transition-delay: .18s; }
+  .pcards .reveal:nth-child(5) { transition-delay: .24s; }
+  .pcards .reveal:nth-child(6) { transition-delay: .30s; }
   .skills-grid .reveal:nth-child(2) { transition-delay: .06s; }
   .skills-grid .reveal:nth-child(3) { transition-delay: .12s; }
   .skills-grid .reveal:nth-child(4) { transition-delay: .18s; }
@@ -713,196 +752,120 @@
         <span class="sline"></span>
       </div>
 
-      <div class="projects">
-
-        <!-- Project 01 — FormForge AI -->
-        <article class="project reveal" data-idx="01">
-          <div class="project-inner">
-            <div class="phead">
-              <div class="pidx">01<span class="sl"> / 03</span></div>
-              <div class="ptitle-block">
-                <div class="pcat">AI Form Builder</div>
-                <h3 class="pname">FormForge <span class="a">AI</span></h3>
-                <p class="ptagline">Describe a form in plain language, get a complete, shareable form back in seconds.</p>
+      <!-- Featured flagship — Sardex (full case-study, always on top) -->
+      <article class="pfeatured reveal" data-cat="featured fullstack ai">
+        <div class="pfeatured-inner">
+          <span class="pf-tag">Featured project</span>
+          <div class="pf-head">
+            <div class="pf-title-block">
+              <div class="pcat">AI Chat Platform</div>
+              <h3 class="pf-name">Sardex</h3>
+              <p class="pf-tagline">Full-stack AI platform built independently — from architecture to deployment.</p>
+            </div>
+            <div class="pf-links">
+              <a class="pf-link" href="https://github.com/SamijonovSardor/Sardex" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+          <div class="pf-body">
+            <p class="pf-intro">
+              A full-stack, <strong>multi-model AI chat platform</strong> — unified routing across 10+ LLMs, a Deep Research agent, RAG memory, and a complete billing system. Built <strong>independently</strong> from architecture to deployment.
+            </p>
+            <div class="pf-features">
+              <div class="pf-feat">
+                <div class="pl"><span class="n">01</span>Unified LLM Routing</div>
+                <div class="pd">10+ models — <b>OpenAI, Claude, Gemini</b> and open-source — routed via <b>OpenRouter</b> with a custom model-selection UI.</div>
               </div>
-              <div class="phead-right">
-                <div class="plinks">
-                  <a class="plink" href="https://github.com/SamijonovSardor/AI-form-builder" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
-                    Source
-                  </a>
-                </div>
+              <div class="pf-feat">
+                <div class="pl"><span class="n">02</span>Deep Research Agent</div>
+                <div class="pd">Parallel web search, content extraction, a <b>real-time citation sidebar</b>, and a streaming UI for long-running research.</div>
+              </div>
+              <div class="pf-feat">
+                <div class="pl"><span class="n">03</span>RAG Memory</div>
+                <div class="pd">Per-conversation user facts extracted and <b>injected into context</b> for personalized, memory-aware responses.</div>
+              </div>
+              <div class="pf-feat">
+                <div class="pl"><span class="n">04</span>Billing System</div>
+                <div class="pd"><b>Click payment gateway</b>, token-based usage metering, per-plan rate limits, and a complete top-up flow.</div>
               </div>
             </div>
-
-            <div class="pmeta">
-              <span class="mi"><b>Solo build</b></span>
-              <span class="mi">Frontend + AI</span>
-              <span class="mi">11 technologies</span>
-            </div>
-
-            <div class="pbody">
-              <p class="pintro">
-                An AI-powered form builder that turns a single natural-language prompt into a complete, validated, shareable form — built <strong>solo, end to end</strong>, on the modern React stack.
-              </p>
-
-              <div class="pfeatures">
-                <div class="pfeat">
-                  <div class="pl"><span class="n">01</span>AI Generation</div>
-                  <div class="pd">Natural-language prompt sent to an LLM (<b>OpenRouter / Cerebras</b>, swappable via a single env var). Output validated against a runtime-generated <b>Zod schema</b> before it enters the builder.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">02</span>Custom DnD Engine</div>
-                  <div class="pd">Drag-and-drop builder built <b>from scratch</b> with no external DnD library. Field reordering uses position-based transforms and CSS transitions for smooth, native-feeling drags.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">03</span>Live Preview &amp; Public Page</div>
-                  <div class="pd">Desktop/mobile preview toggle, plus a shareable public form page with <b>client-side validation</b> generated dynamically from the field schema.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">04</span>Appwrite Integration</div>
-                  <div class="pd"><b>Auth</b>, <b>TablesDB</b> for forms &amp; responses, <b>Storage</b> for file uploads — with public/private permissions scoped per table.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">05</span>Decoupled State</div>
-                  <div class="pd">Builder, auth and UI state split across separate <b>Zustand stores</b> — fully decoupled from persistence, flushed to Appwrite only on save.</div>
-                </div>
-              </div>
-
-              <div class="pstack-row">
-                <span class="pslabel">Stack</span>
-                <div class="pstack">
-                  <span class="chip">Next.js 16</span><span class="chip">React 19</span><span class="chip">TypeScript</span>
-                  <span class="chip">Tailwind 4</span><span class="chip">Appwrite</span><span class="chip">Zustand</span>
-                  <span class="chip">Zod</span><span class="chip">Radix UI</span><span class="chip">shadcn/ui</span>
-                  <span class="chip">Framer Motion</span><span class="chip">react-hook-form</span>
-                </div>
+            <div class="pf-stack-row">
+              <span class="pf-slabel">Stack</span>
+              <div class="pf-stack">
+                <span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">React / Next.js</span>
+                <span class="chip">PostgreSQL</span><span class="chip">Docker</span><span class="chip">nginx</span>
+                <span class="chip">Linux</span><span class="chip">OpenAI API</span><span class="chip">Anthropic API</span>
+                <span class="chip">Click API</span><span class="chip">Git</span>
               </div>
             </div>
           </div>
-        </article>
+        </div>
+      </article>
 
-        <!-- Project 02 — Sardex (flagship, live) -->
-        <article class="project reveal" data-idx="02">
-          <div class="project-inner">
-            <div class="phead">
-              <div class="pidx">02<span class="sl"> / 03</span></div>
-              <div class="ptitle-block">
-                <div class="pcat">AI Chat Platform</div>
-                <h3 class="pname">Sardex</h3>
-                <p class="ptagline">Full-stack AI platform built independently — from architecture to domain deployment.</p>
-              </div>
-              <div class="phead-right">
-                <div class="plinks">
-                  <a class="plink" href="https://github.com/SamijonovSardor/Sardex" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
-                    Source
-                  </a>
-                </div>
-              </div>
-            </div>
+      <!-- Filter bar -->
+      <div class="pfilters reveal" id="pfilterbar">
+        <button class="pfilter active" data-filter="all">All <span class="ct" id="ct-all">2</span></button>
+        <button class="pfilter" data-filter="ai">AI <span class="ct" id="ct-ai">2</span></button>
+        <button class="pfilter" data-filter="frontend">Frontend <span class="ct" id="ct-frontend">2</span></button>
+        <button class="pfilter" data-filter="fullstack">Full-Stack <span class="ct" id="ct-fullstack">0</span></button>
+      </div>
 
-            <div class="pmeta">
-              <span class="mi"><b>Solo build</b></span>
-              <span class="mi">Full-stack + AI</span>
-              <span class="mi">11 technologies</span>
-            </div>
+      <!-- Project grid — scales to any number of cards -->
+      <div class="pcards" id="pcards">
 
-            <div class="pbody">
-              <p class="pintro">
-                A full-stack, <strong>multi-model AI chat platform</strong> — unified routing across 10+ LLMs, a Deep Research agent, RAG memory, and a complete billing system. Built <strong>independently</strong> from architecture to deployment.
-              </p>
-
-              <div class="pfeatures">
-                <div class="pfeat">
-                  <div class="pl"><span class="n">01</span>Unified LLM Routing</div>
-                  <div class="pd">10+ models — <b>OpenAI, Claude, Gemini</b> and open-source — routed via <b>OpenRouter</b> with a custom model-selection UI.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">02</span>Deep Research Agent</div>
-                  <div class="pd">Parallel web search, content extraction, a <b>real-time citation sidebar</b>, and a streaming UI for long-running research.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">03</span>RAG Memory</div>
-                  <div class="pd">Per-conversation user facts extracted and <b>injected into context</b> for personalized, memory-aware responses.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">04</span>Billing System</div>
-                  <div class="pd"><b>Click payment gateway</b>, token-based usage metering, per-plan rate limits, and a complete top-up flow.</div>
-                </div>
-              </div>
-
-              <div class="pstack-row">
-                <span class="pslabel">Stack</span>
-                <div class="pstack">
-                  <span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">React / Next.js</span>
-                  <span class="chip">PostgreSQL</span><span class="chip">Docker</span><span class="chip">nginx</span>
-                  <span class="chip">Linux</span><span class="chip">OpenAI API</span><span class="chip">Anthropic API</span>
-                  <span class="chip">Click API</span><span class="chip">Git</span>
-                </div>
-              </div>
-            </div>
+        <!-- Card 01 — FormForge AI -->
+        <article class="pcard reveal" data-cat="ai frontend">
+          <div class="pc-top">
+            <span class="pc-index">01<span class="sl"> / 02</span></span>
+          </div>
+          <div class="pc-cat">AI Form Builder</div>
+          <h3 class="pc-name">FormForge <span class="a">AI</span></h3>
+          <p class="pc-tagline">Describe a form in plain language, get a complete, shareable form back in seconds.</p>
+          <p class="pc-desc">
+            Turns a natural-language prompt into a complete, validated, shareable form — built <b>solo, end to end</b> on the modern React stack. Features AI generation with runtime Zod validation, a <b>custom drag-and-drop engine</b> built from scratch, live preview, full Appwrite integration, and decoupled Zustand state.
+          </p>
+          <div class="pc-stack">
+            <span class="chip">Next.js 16</span><span class="chip">React 19</span><span class="chip">TypeScript</span>
+            <span class="chip">Tailwind 4</span><span class="chip">Appwrite</span><span class="chip">Zustand</span>
+            <span class="chip">Zod</span><span class="chip">shadcn/ui</span><span class="chip">Framer Motion</span>
+          </div>
+          <div class="pc-links">
+            <a class="pc-link" href="https://github.com/SamijonovSardor/AI-form-builder" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+              Source
+            </a>
           </div>
         </article>
 
-        <!-- Project 03 — MoodFood (in development) -->
-        <article class="project reveal" data-idx="03">
-          <div class="project-inner">
-            <div class="phead">
-              <div class="pidx">03<span class="sl"> / 03</span></div>
-              <div class="ptitle-block">
-                <div class="pcat">AI Meal Recommendation</div>
-                <h3 class="pname">MoodFood</h3>
-                <p class="ptagline">Mood-aware AI food assistant — in active development, ~80% complete.</p>
-              </div>
-              <div class="phead-right">
-                <span class="status dev"><span class="sd"></span>In development</span>
-                <div class="plinks">
-                  <a class="plink" href="https://github.com/SamijonovSardor/MoodFood" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
-                    Source
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="pmeta">
-              <span class="mi"><b>Solo build</b></span>
-              <span class="mi">Frontend + AI</span>
-              <span class="mi">9 technologies</span>
-            </div>
-
-            <div class="pbody">
-              <p class="pintro">
-                A <strong>mood-aware AI food assistant</strong> that recommends meals from a mood input and analyzes fridge photos to suggest recipes — currently in active development, <strong>~80% complete</strong>.
-              </p>
-
-              <div class="pfeatures">
-                <div class="pfeat">
-                  <div class="pl"><span class="n">01</span>Mood Recommendations</div>
-                  <div class="pd">Meal ideas returned by the LLM as <b>structured JSON</b> based on the user's mood input.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">02</span>Fridge Image Analysis</div>
-                  <div class="pd">User uploads a photo of their fridge; AI <b>identifies ingredients</b> and suggests recipes from what's available.</div>
-                </div>
-                <div class="pfeat">
-                  <div class="pl"><span class="n">03</span>Auth &amp; Polished UI</div>
-                  <div class="pd"><b>Google OAuth</b> via NextAuth.js with Drizzle ORM / SQLite, plus an animated, responsive landing page (Tailwind + shadcn/ui).</div>
-                </div>
-              </div>
-
-              <div class="pstack-row">
-                <span class="pslabel">Stack</span>
-                <div class="pstack">
-                  <span class="chip">Next.js 14</span><span class="chip">TypeScript</span><span class="chip">Tailwind</span>
-                  <span class="chip">shadcn/ui</span><span class="chip">NextAuth.js</span><span class="chip">Drizzle ORM</span>
-                  <span class="chip">SQLite</span><span class="chip">OpenRouter API</span><span class="chip">Google OAuth</span>
-                </div>
-              </div>
-            </div>
+        <!-- Card 02 — MoodFood -->
+        <article class="pcard reveal" data-cat="ai frontend">
+          <div class="pc-top">
+            <span class="pc-index">02<span class="sl"> / 02</span></span>
+            <span class="pc-status"><span class="sd"></span>In development</span>
+          </div>
+          <div class="pc-cat">AI Meal Recommendation</div>
+          <h3 class="pc-name">MoodFood</h3>
+          <p class="pc-tagline">Mood-aware AI food assistant — in active development, ~80% complete.</p>
+          <p class="pc-desc">
+            Recommends meals from a mood input and analyzes <b>fridge photos</b> to suggest recipes from what's available. The LLM returns meals as <b>structured JSON</b>; auth via Google OAuth (NextAuth.js) with Drizzle ORM / SQLite and an animated, responsive landing page.
+          </p>
+          <div class="pc-stack">
+            <span class="chip">Next.js 14</span><span class="chip">TypeScript</span><span class="chip">Tailwind</span>
+            <span class="chip">shadcn/ui</span><span class="chip">NextAuth.js</span><span class="chip">Drizzle ORM</span>
+            <span class="chip">SQLite</span><span class="chip">OpenRouter API</span>
+          </div>
+          <div class="pc-links">
+            <a class="pc-link" href="https://github.com/SamijonovSardor/MoodFood" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+              Source
+            </a>
           </div>
         </article>
+
+        <!-- Empty state (shown when filter has no matches) -->
+        <div class="pempty hidden" id="pempty">No projects in this category yet.</div>
 
       </div>
     </div>
@@ -1094,6 +1057,47 @@
       });
     }, { threshold: 0.4, rootMargin: '-20% 0px -50% 0px' });
     sections.forEach(function (s) { so.observe(s); });
+  }
+
+  // ---------- Project filter ----------
+  var filterbar = document.getElementById('pfilterbar');
+  var pcards    = document.getElementById('pcards');
+  var pempty    = document.getElementById('pempty');
+  if (filterbar && pcards) {
+    var cards = pcards.querySelectorAll('.pcard');
+    // Compute counts per category from data-cat attributes
+    var counts = { all: 0, ai: 0, frontend: 0, fullstack: 0 };
+    cards.forEach(function (c) {
+      counts.all++;
+      var cats = (c.getAttribute('data-cat') || '').split(/\s+/);
+      cats.forEach(function (cat) { if (counts.hasOwnProperty(cat)) counts[cat]++; });
+    });
+    // Update count badges
+    Object.keys(counts).forEach(function (k) {
+      var el = document.getElementById('ct-' + k);
+      if (el) el.textContent = counts[k];
+    });
+    // Hide filters that have zero cards (except "all")
+    filterbar.querySelectorAll('.pfilter').forEach(function (btn) {
+      var f = btn.getAttribute('data-filter');
+      if (f !== 'all' && counts[f] === 0) btn.style.display = 'none';
+    });
+
+    filterbar.addEventListener('click', function (e) {
+      var btn = e.target.closest('.pfilter');
+      if (!btn) return;
+      var filter = btn.getAttribute('data-filter');
+      filterbar.querySelectorAll('.pfilter').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var visible = 0;
+      cards.forEach(function (c) {
+        var cats = (c.getAttribute('data-cat') || '').split(/\s+/);
+        var show = (filter === 'all' || cats.indexOf(filter) !== -1);
+        c.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      if (pempty) pempty.classList.toggle('hidden', visible !== 0);
+    });
   }
 </script>
 </body>
